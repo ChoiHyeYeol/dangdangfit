@@ -6,19 +6,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // 기본 진입점
-        registry.addViewController("/")
-                .setViewName("forward:/index.html");
-
-        // /my, /recipe 같은 단일 뎁스 라우팅
-        registry.addViewController("/{spring:[a-zA-Z0-9-_]+}")
-                .setViewName("forward:/index.html");
-
-        // 다중 뎁스 라우팅(/my/edit/info 같은 경우)
-        registry.addViewController("/**/{spring:[a-zA-Z0-9-_]+}")
-                .setViewName("forward:/index.html");
-    }
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    registry.addViewController("/").setViewName("forward:/index.html");
+    // /api 제외 1뎁스
+    registry.addViewController("/{path:^(?!api$).*$}")
+            .setViewName("forward:/index.html");
+    // 하위 전부 (⚠️ **는 반드시 "맨 끝")
+    registry.addViewController("/{path:^(?!api$).*$}/**")
+            .setViewName("forward:/index.html");
+  }
 }
