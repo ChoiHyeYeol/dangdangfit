@@ -1,5 +1,3 @@
-// src/main/java/com/inside/ddf/config/WebConfig.java
-
 package com.inside.ddf.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +9,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/index.html");
-        registry.addViewController("/{x:[\\w\\-]+}").setViewName("forward:/index.html");
-        registry.addViewController("/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}").setViewName("forward:/index.html");
+        // 기본 진입점
+        registry.addViewController("/")
+                .setViewName("forward:/index.html");
+
+        // /my, /recipe 같은 단일 뎁스 라우팅
+        registry.addViewController("/{spring:[a-zA-Z0-9-_]+}")
+                .setViewName("forward:/index.html");
+
+        // 다중 뎁스 라우팅(/my/edit/info 같은 경우)
+        registry.addViewController("/**/{spring:[a-zA-Z0-9-_]+}")
+                .setViewName("forward:/index.html");
     }
 }
