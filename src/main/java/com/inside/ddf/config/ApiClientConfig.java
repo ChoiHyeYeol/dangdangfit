@@ -19,11 +19,11 @@ public class ApiClientConfig {
  @Bean
  public WebClient fastApiClient() {
      HttpClient httpClient = HttpClient.create()
-             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-             .responseTimeout(Duration.ofSeconds(40))
+             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
+             .responseTimeout(Duration.ofSeconds(120))
              .doOnConnected(conn -> conn
-                     .addHandlerLast(new ReadTimeoutHandler(40, TimeUnit.SECONDS))
-                     .addHandlerLast(new WriteTimeoutHandler(40, TimeUnit.SECONDS))
+                     .addHandlerLast(new ReadTimeoutHandler(120, TimeUnit.SECONDS))
+                     .addHandlerLast(new WriteTimeoutHandler(120, TimeUnit.SECONDS))
              );
 
      return WebClient.builder()

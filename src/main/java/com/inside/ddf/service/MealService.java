@@ -16,6 +16,7 @@ import com.inside.ddf.code.CategoryTime;
 import com.inside.ddf.dto.MealUpdateGet;
 import com.inside.ddf.dto.frontend.EnterMealDTO;
 import com.inside.ddf.dto.frontend.MainRecipeDTO;
+import com.inside.ddf.dto.frontend.SelectMealDTO;
 import com.inside.ddf.dto.req.MealReq;
 import com.inside.ddf.dto.req.OneMealReq;
 import com.inside.ddf.dto.res.MealRes;
@@ -159,6 +160,19 @@ public class MealService {
     	result.setDDay(Period.between(user.getCreateDt(), day).getDays());
     	result.setNickName(user.getNickNm());
     	result.setMainMeal(getMeal(user,time,day));
+    	result.setDessertMeal(getMeal(user,3,day));
+    	return result;
+	}
+	
+	public SelectMealDTO selectMeal(LocalDate day, TB_USER user) {
+
+    	SelectMealDTO result = new SelectMealDTO();
+    	result.setDate(day);
+    	result.setDDay(Period.between(user.getCreateDt(), day).getDays());
+    	result.setNickName(user.getNickNm());
+    	result.setBreakfastMeal(getMeal(user,0,day));
+    	result.setLunchMeal(getMeal(user,1,day));
+    	result.setDinnerMeal(getMeal(user,2,day));
     	result.setDessertMeal(getMeal(user,3,day));
     	return result;
 	}

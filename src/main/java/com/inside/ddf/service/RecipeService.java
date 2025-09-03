@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -197,6 +201,10 @@ public class RecipeService {
 				.bodyToMono(RecipeRes.class).block();
 		return res;
 	}
+	
+	public void test(TB_USER user, RecipeRes res,int idx) {
+		updateRecipeByUser(user,res,idx);
+	}
 
 	public TB_RECIPE updateRecipeByUser(TB_USER user, RecipeRes res) {
 
@@ -279,6 +287,87 @@ public class RecipeService {
 		return recipe;
 	}
 
+	public TB_RECIPE updateRecipeByUser(TB_USER user, RecipeRes res, int idx) {
+
+		RecipeRes.Food detail = res.getFood();
+		// 1. 레시피 저장
+		TB_RECIPE recipe = new TB_RECIPE();
+		recipe.setMainImg(detail.getMainImg());
+		recipe.setRcpId("food"+idx+".json");
+		recipe.setRcpNm(detail.getTitle());
+		if (detail.getTitle().length() == 0)
+			return recipe;
+		recipe.setUser(user);
+		recipe.setDescTxt(detail.getSummary());
+		recipe.setPortion(detail.getPortion());
+		recipe.setTime(detail.getTime());
+		recipe.setLevel(detail.getLevel());
+		recipe.setTip(detail.getTip());
+		
+		recipe.setChVal(res.getChVal());
+		recipe.setFatVal(res.getFatVal());
+		recipe.setGiVal(res.getGiVal());
+		recipe.setIcVal(res.getIcVal());
+		recipe.setPrVal(res.getPrVal());
+		
+		
+		recipe = rep_rcp.save(recipe);
+
+		// 2. 소스 저장.
+		// 양쪽의 { } 제거
+
+		Map <String,String> sauceMap = detail.getSauce();
+		if (!sauceMap.isEmpty()) {
+
+			for (String key : sauceMap.keySet()) {
+				TB_RECIPE_SAUCE sauce = new TB_RECIPE_SAUCE();
+				
+				sauce.setSauceName(key);
+				sauce.setSauceCnt(sauceMap.get(key));
+				sauce.setRecipe(recipe);
+				System.out.println("key=" + key + ", value=" + sauceMap.get(key));
+				rep_sauce.save(sauce);
+			}
+		}
+
+		// 3. 재료 저장.
+		// 양쪽의 { } 제거
+		Map <String,String> ingrMap = detail.getIngredient();
+		if (!ingrMap.isEmpty()) {
+			for (String key : ingrMap.keySet()) {
+				TB_RECIPE_INGR ingr = new TB_RECIPE_INGR();
+				
+				ingr.setIngrName(key);
+				ingr.setIngrCnt(ingrMap.get(key));
+				ingr.setRecipe(recipe);
+				System.out.println("key=" + key + ", value=" + ingrMap.get(key));
+				rep_ingr.save(ingr);
+			}
+		}
+		
+		// 4. 스텝 저장.
+		List<Map<String, String>> stepMapList = detail.getStepList();
+		if (!stepMapList.isEmpty()) {
+			for(int i=0;i<stepMapList.size();i++) {
+				Map <String,String> stepMap = stepMapList.get(i);
+				if (!stepMap.isEmpty()) {
+					for (String key : stepMap.keySet()) {
+						TB_RECIPE_STEP step = new TB_RECIPE_STEP();
+						step.setStepOrd(i+1);
+						step.setStepCont(key);
+						step.setStepImg(stepMap.get(key));
+						step.setRecipe(recipe);
+						System.out.println("key=" + key + ", value=" + stepMap.get(key));
+						rep_step.save(step);
+					}
+				}
+			}
+			
+		}
+		
+		return recipe;
+	}
+	
 	
 	public boolean deleteRecipe(String rcpId) {
 		Optional<TB_RECIPE> temp = rep_rcp.findById(rcpId);
@@ -298,7 +387,13 @@ public class RecipeService {
 		}
 	}
 	
-	
+	// 레시피 검색
+	public List<RecipeTopDto> searchRecipe(TB_USER user, String query) {
+		Page<TB_RECIPE> response = rep_rcp.searchSimple(query, PageRequest.of(0,10));
+		List<TB_RECIPE> content = response.getContent();
+//		for(int i=0;i<content.size();i++) System.out.println(content.get(i).getRcpNm());
+		return getListRecipeTopDto(user.getUserId(),content);
+	}
 	
 	
 	
@@ -607,4 +702,42 @@ public class RecipeService {
 	private static String n(String s) {
 		return isBlank(s) ? null : s.trim();
 	}
+	
+	
+	
+	// DB에 STEP 이미지 다시 넣기
+//	public void stepImgPush() {
+//		try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\dreac\\Desktop\\실전\\데이터\\stepImgOutput.csv"))) {
+//		    String line;
+//		    int idx=0;
+//		    while ((line = br.readLine()) != null) {
+//		        String[] values = line.split(",");
+//		        // values[0], values[1] ... 로 접근
+////		        for (int i=0;i<values.length;i++) {
+////		        	values[i]
+////		        }
+//		        String rcp_id = "food"+idx+".json";
+//		        List<TB_RECIPE_STEP> stepList = rep_step.findAllByRecipe_RcpId(rcp_id);
+//		        for(int i=0;i<stepList.size();i++) {
+////			        System.out.println(values[i]);
+//			        try {
+//			        	stepList.get(i).setStepImg(values[i]);
+//			        	rep_step.save(stepList.get(i));
+//			        	System.out.println(values[i]);
+//			        }
+//			        catch(Exception e){
+//			        	break;
+//			        }
+//			        
+//		        }
+//		        
+//		    }
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }

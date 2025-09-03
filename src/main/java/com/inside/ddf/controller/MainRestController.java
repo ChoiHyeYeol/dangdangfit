@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inside.ddf.code.GluTypeCode;
@@ -52,6 +51,14 @@ public class MainRestController {
 	// 챗봇에게 질문 입력하고 "보내기" 눌렀을 때 -> 답변 한줄이 반환됨.
     @PostMapping("/api/model/chat/ask")
     public String recommend(@RequestBody ChatReq req, HttpSession session){
+    	TB_USER user= (TB_USER) session.getAttribute("user");
+    	List<List<Integer>> temp = mainService.get7daysBlood(user);
+    	List<Integer> fast_glu = new ArrayList<>();
+    	for(int i=0;i<temp.size();i++) {
+    		if (temp.get(i).get(3)==-1) continue; 
+    		else fast_glu.add(temp.get(i).get(3));
+    	}
+    	req.setRecent_glucose(fast_glu);
     	return mainService.getExplainChat(req, session);
     	//mainService.getChat(req);
     }
@@ -121,16 +128,11 @@ public class MainRestController {
     // 점심 : type=A
     // 저녁 : type=E
     @GetMapping("/api/get/blood")
-    public int getBlood(@RequestParam GluTypeCode type, HttpSession session) {
+    public List<Integer> getBlood(HttpSession session) {
     	TB_USER user= (TB_USER) session.getAttribute("user");
     	List<Integer> list = (List<Integer>)session.getAttribute("gluList");
-		switch(type) {
-		case F: return list.get(0);
-		case M: return list.get(1);
-		case A: return list.get(2);
-		case E: return list.get(3);
-		default: return -1;
-		}
+		 return list;
+		
     }
     // 일정관리 팝업창에서 "저장" 눌렀을 때
     @PostMapping("/api/update/calendar")

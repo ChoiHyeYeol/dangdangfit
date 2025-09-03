@@ -8,5 +8,5 @@ import lombok.Data;
 public class GetMealInDTO {
 
 	LocalDate date;
-	int time;
+//	int time;
 }

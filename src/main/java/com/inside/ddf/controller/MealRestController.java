@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inside.ddf.dto.MealUpdateGet;
 import com.inside.ddf.dto.frontend.EnterMealDTO;
 import com.inside.ddf.dto.frontend.GetMealInDTO;
+import com.inside.ddf.dto.frontend.SelectMealDTO;
 import com.inside.ddf.dto.req.MealReq;
 import com.inside.ddf.entity.TB_USER;
 import com.inside.ddf.service.MealService;
@@ -72,7 +73,7 @@ public class MealRestController {
     
     // 노션 1번 기능. 진입했을 때
     @GetMapping("/api/diet")
-    public EnterMealDTO enterMeal(HttpSession session) {
+    public SelectMealDTO enterMeal(HttpSession session) {
     	// 유저 세션 불러오기 및 식단 세션 설정.
     	TB_USER user = (TB_USER) session.getAttribute("user");
     	LocalDate day = LocalDate.now();
@@ -83,22 +84,25 @@ public class MealRestController {
 		else if(date.getHour()<16) time=1;
 		else time=2;
     	session.setAttribute("mealSelectTime", time);
-    	return mealService.enterMeal(day,user,time);
+//    	return mealService.selectMeal(day,user,time);
+    	return mealService.selectMeal(day,user);
     }
     
     // 노션 2번 + 3번 기능.
     // 날짜를 선택하면 자동으로 FE에서의 state 값이 0으로 바뀌게 초기화하기.
     // 다음, 이전을 눌러도 현재 선택된 날짜가 session에 담겨져 있으므로 해당 날짜에서의 이동 가능.
     @PostMapping("/api/diet")
-    public List<List<String>> getMeal(@RequestBody GetMealInDTO dto, HttpSession session) {
+    public List<List<List<String>>> getMeal(@RequestBody GetMealInDTO dto, HttpSession session) {
     	TB_USER user = (TB_USER) session.getAttribute("user");
-    	System.out.println(dto.getTime());
+//    	System.out.println(dto.getTime());
 		session.setAttribute("mealSelectDate", dto.getDate());
-		session.setAttribute("mealSelectTime", dto.getTime());
-		System.out.println(mealService.getMeal(user,dto.getTime(),dto.getDate()));
-    	return mealService.getMeal(user,dto.getTime(),dto.getDate());
-    	
-    
+//		session.setAttribute("mealSelectTime", dto.getTime());
+		System.out.println(mealService.getMeal(user,0,dto.getDate()));
+//    	return mealService.getMeal(user,dto.getTime(),dto.getDate());
+		List<List<List<String>>> result = List.of(mealService.getMeal(user,0,dto.getDate()),
+				mealService.getMeal(user,1,dto.getDate()),
+				mealService.getMeal(user,2,dto.getDate()));
+    	return result;
     }
     
     

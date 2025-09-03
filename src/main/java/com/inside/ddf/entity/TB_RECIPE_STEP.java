@@ -24,7 +24,7 @@ public class TB_RECIPE_STEP {
     @Column(name = "step_ord", nullable = false)
     private Integer stepOrd;   // 단계 순서
 
-    @Column(name = "step_cont", length = 500, nullable = false)
+    @Column(name = "step_cont", length = 1000, nullable = false)
     private String stepCont;   // 단계 설명
 
     @Column(name = "step_img", length = 255)
