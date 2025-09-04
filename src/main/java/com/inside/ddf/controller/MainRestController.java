@@ -63,17 +63,23 @@ public class MainRestController {
     	//mainService.getChat(req);
     }
 
-    // 챗봇에 처음 막 진입했을 때. -> 이전 대화 기록을 원한다면 BE 담당자에게 문의할것.
+ // 챗봇에 처음 막 진입했을 때. -> 이전 대화 기록을 원한다면 BE 담당자에게 문의할것.
     @GetMapping("/api/chat")
-    public void enterChat(HttpSession session) {
-    	TB_USER user= (TB_USER) session.getAttribute("user");
-//    	String Nickname = user.getNickNm();
-//    	return Nickname;
-    	List<TB_CHAT_LOG> chat_log = mainService.getChatLog(user);
-    	for (int i=0; i<chat_log.size();i++) {
-    		System.out.println(chat_log.get(i).getOutputTxt());
-    	}
-//    	return chat_log;
+    public List<List<String>> enterChat(HttpSession session) {
+       TB_USER user= (TB_USER) session.getAttribute("user");
+//       String Nickname = user.getNickNm();
+//       return Nickname;
+       List<TB_CHAT_LOG> chat_log = mainService.getChatLog(user);
+       List<List<String>> result = new ArrayList<List<String>>();
+       for (int i=0; i<chat_log.size();i++) {
+          System.out.println(chat_log.get(i).getOutputTxt());
+          List<String> item = List.of(chat_log.get(i).getInputTxt()
+                ,chat_log.get(i).getOutputTxt(),chat_log.get(i).getChatDt().toString());
+          result.add(item);
+       }
+       
+       
+       return result;
     }
     
     // 로그인 끝나고 메인에 막 진입했을 때. + 상단의  record EnterMainResponse 참고
