@@ -107,7 +107,7 @@ public class MainRestController {
     	LocalDateTime date = LocalDateTime.now();
 		int time=0;
 		if (date.getHour()<8) time=0;
-		if (date.getHour()<11) time=1;
+		else if (date.getHour()<11) time=1;
 		else if(date.getHour()<16) time=2;
 		else time=3;
 		
