@@ -209,7 +209,7 @@ public class MainService {
     @Autowired
     private MealService mealService;
     
-    @Scheduled(cron = "0 0 0 * * SUN", zone = "Asia/Seoul")
+    
     public void runSundayJobs() {
         userService.updateWeek();   	  // 1) 주차수 업데이트
         mealService.addAllUserMeal();     // 2) 식단 추천
