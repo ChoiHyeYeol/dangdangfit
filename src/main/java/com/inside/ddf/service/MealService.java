@@ -113,11 +113,16 @@ public class MealService {
     					}
     				}
     				else {
-    					TB_FOOD food = rep_food.findById(content).get();
-    					TB_MEAL_ITEM entity = new TB_MEAL_ITEM();
-						entity.setMeal(mp);
-						entity.setFood(food);
-						rep_item.save(entity);
+    					try {
+    						TB_FOOD food = rep_food.findById(content).get();
+        					TB_MEAL_ITEM entity = new TB_MEAL_ITEM();
+    						entity.setMeal(mp);
+    						entity.setFood(food);
+    						rep_item.save(entity);
+    					}
+    					catch(Exception e) {
+    						// DB에 안들어간 내용.
+    					}
     				}
     					
     			}
