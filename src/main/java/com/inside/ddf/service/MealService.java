@@ -55,6 +55,8 @@ public class MealService {
 	@Autowired
 	Rep_USER rep_user;
 	
+	@Autowired
+	SurveyService surveyService;
 
 	CategoryTime[] mealType = {CategoryTime.B,CategoryTime.L,CategoryTime.D,CategoryTime.S};
 	
@@ -63,8 +65,8 @@ public class MealService {
 		for(int i=0;i<userList.size();i++) {
 			TB_USER user = userList.get(i);
 			MealReq req = new MealReq();
-	    	List<String> allergies = List.of("");
-	    	List<String> preferences = List.of("");
+	    	List<String> allergies = surveyService.getAllergies(user);
+	    	List<String> preferences = surveyService.getPreferences(user);
 	    	req.setAllergies(allergies);
 	    	req.setPreferences(preferences);
 	    	if (user.getUserType() == null) continue; // 설문조사 완료하지 않은 상태에서 12시가 되면
@@ -186,9 +188,9 @@ public class MealService {
 		int oneDay = meal.getDate().getDayOfWeek().getValue()%7;
 		req.setOneDay(oneDay);
 		
-		List<String> allergies = List.of(""); // 사용자 설문조사 응답을 받을 예정.
+		List<String> allergies = surveyService.getAllergies(user); // 사용자 설문조사 응답을 받을 예정.
 		req.setAllergies(allergies);
-		List<String> preferences = List.of(""); // 사용자 설문조사 응답을 받을 예정.
+		List<String> preferences = surveyService.getPreferences(user); // 사용자 설문조사 응답을 받을 예정.
 		req.setPreferences(preferences);
 		req.setUser_type(user.getUserType().toString());
 		
