@@ -12,8 +12,7 @@ public class CorsConfig implements WebMvcConfigurer{
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000") // 허용할 Origin 설정
                 .allowedOrigins("https://101.79.9.165:3000") // 허용할 Origin 설정
-                .allowedOrigins("https://dangdangfit.smhrd.com/") // 허용할 Origin 설정
-                .allowedOrigins("https://101.79.9.165:8086") // 허용할 Origin 설정
+                .allowedOrigins("https://dangdangfit.smhrd.com/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
 		        .allowedHeaders("*")
 		        .allowCredentials(true); // ✅ 세션/쿠키 주고받을 수 있도록 허용
