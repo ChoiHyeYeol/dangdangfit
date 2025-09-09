@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.9f89c453.css",
+    "main.css": "/static/css/main.f4be492a.css",
     "main.js": "/static/js/main.069e9078.js",
     "static/js/453.57c54e46.chunk.js": "/static/js/453.57c54e46.chunk.js",
     "static/media/surveyend.png": "/static/media/surveyend.e82038dc061010ab3148.png",
@@ -8,6 +8,8 @@
     "static/media/onboardingpage2.png": "/static/media/onboardingpage2.510ab3a9b27e578d77a6.png",
     "static/media/onboardingbackground.png": "/static/media/onboardingbackground.d003601801774254721a.png",
     "static/media/onboardingpage3.png": "/static/media/onboardingpage3.95a0e1678f0c12ebfc38.png",
+    "static/media/NanumSquareRoundB.ttf": "/static/media/NanumSquareRoundB.8ab117fc37409bd022e5.ttf",
+    "static/media/NanumSquareRoundEB.ttf": "/static/media/NanumSquareRoundEB.ef4043133d5b2d0febb4.ttf",
     "static/media/onboardingpage4.png": "/static/media/onboardingpage4.e2f8d974142568828b53.png",
     "static/media/dinner.png": "/static/media/dinner.e6df112f52be189703e5.png",
     "static/media/maintrans.png": "/static/media/maintrans.c2ed1522203c3e131e76.png",
@@ -21,6 +23,7 @@
     "static/media/B.png": "/static/media/B.d156d68a06c198a50b90.png",
     "static/media/S.png": "/static/media/S.b224b1f360325bb7386b.png",
     "static/media/K.png": "/static/media/K.ea24c780212ae4ffc151.png",
+    "static/media/LOTTERIADDAG.woff2": "/static/media/LOTTERIADDAG.53aaf269f81e6c29bd51.woff2",
     "static/media/Banner4.png": "/static/media/Banner4.c84c671aae4fb88b47c8.png",
     "static/media/M.png": "/static/media/M.d2de5ff63cf189d5e4ec.png",
     "static/media/P.png": "/static/media/P.533f669f96164133f62b.png",
@@ -38,12 +41,12 @@
     "static/media/search.svg": "/static/media/search.5735e9cd349d8d4e86ce9bdcb4a27429.svg",
     "static/media/search_active.svg": "/static/media/search_active.e2c9258a9b0bc85d943789cf469de175.svg",
     "index.html": "/index.html",
-    "main.9f89c453.css.map": "/static/css/main.9f89c453.css.map",
+    "main.f4be492a.css.map": "/static/css/main.f4be492a.css.map",
     "main.069e9078.js.map": "/static/js/main.069e9078.js.map",
     "453.57c54e46.chunk.js.map": "/static/js/453.57c54e46.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9f89c453.css",
+    "static/css/main.f4be492a.css",
     "static/js/main.069e9078.js"
   ]
 }
